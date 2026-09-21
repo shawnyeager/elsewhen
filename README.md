@@ -1119,7 +1119,17 @@ additional process and follows a time-zone change on the next refresh.
 
 The city name is the zone's last segment, and the tz database names zones
 after a *representative* city: someone in Boca Raton would read "here in New
-York". Set `homeCity` to override it.
+York", and someone in Nashville would read "here in Chicago". Both of those
+places keep the zone the computer is already set to. The clock does not
+change. Only the name in the sentence does.
+
+Tap that city on the globe. Nashville keeps `America/Chicago`, so the header
+stops saying Chicago and says Nashville, and the home pin is placed from
+Nashville. Tap Chicago, the zone's own city, and the stored name is cleared,
+so the header reads Chicago again. A city on another zone leaves the header
+alone. London on a Chicago clock is hours ahead, and the time printed beside
+the name would still be this machine's time. `homeCity` is that stored name.
+Blank means the representative city.
 
 ## Two offsets, one line
 
@@ -1253,7 +1263,7 @@ Inline on the widget's `shell.json` entry:
 | `hour24` | `true` or `false`; blank (the default) follows the system's time format. Click any row's time to flip it |
 | `offsetMode` | `home` for the offset from you (default), `utc` for the absolute one |
 | `units`  | `F` or `C`; blank (the default) follows the system's measurement units. Click any temperature to flip it |
-| `homeCity` | your city for the header (blank = from the system zone) |
+| `homeCity` | your city for the header. Blank means the zone's representative city. Tap a city on the globe that keeps this machine's zone to set it |
 | `smoothMotion` | drop labels and detail while the globe moves (default true) |
 | `skyTint` | `true` to colour cities by their sky (default off, shelved)     |
 | `showCurrency` | `true` to show local currency value in USD (default off) |
