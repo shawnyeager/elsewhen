@@ -2766,7 +2766,7 @@ Panel {
                   return String(root.setting("homeCity", "")).trim()
                 })
                 item.homeClaimRequested.connect(function(label, zone) {
-                  var stored = Model.footerHomeStore(
+                  var stored = Model.globeHomeStore(
                     label, zone, String(root.setting("homeCity", "")).trim(), root.localZone)
                   if (stored === null || stored === undefined) return
                   root.persistSettings({ homeCity: stored })

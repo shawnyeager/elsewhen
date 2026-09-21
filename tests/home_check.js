@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path");
 const src = fs.readFileSync(path.join(__dirname, "..", "Model.js"), "utf8")
   .replace(".pragma library", "");
 const box = {};
-new Function(src + "; this.M={labelForZoneId,footerHomeStore};").call(box);
+new Function(src + "; this.M={labelForZoneId,footerHomeStore,globeHomeStore};").call(box);
 const M = box.M;
 
 let n = 0, f = 0;
@@ -37,6 +37,15 @@ t("no machine zone stores nothing",
   M.footerHomeStore("Nashville", CHI, "", ""), null);
 t("a padded name is the same city",
   M.footerHomeStore("  Nashville  ", CHI, "", CHI), "Nashville");
+
+t("a globe tap on Nashville stores Nashville",
+  M.globeHomeStore("Nashville", CHI, "", CHI), "Nashville");
+t("a second globe tap on Nashville leaves it",
+  M.globeHomeStore("Nashville", CHI, "Nashville", CHI), null);
+t("a globe tap on Chicago while Nashville is home clears it",
+  M.globeHomeStore("Chicago", CHI, "Nashville", CHI), "");
+t("a globe tap on London stores nothing",
+  M.globeHomeStore("London", LON, "", CHI), null);
 
 console.log(`  -> ${n - f}/${n} home assertions passed`);
 process.exit(f ? 1 : 0);

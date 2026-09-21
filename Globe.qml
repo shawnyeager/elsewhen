@@ -174,7 +174,13 @@ Item {
   function pickAt(cx, cy) {
     var hit = hitAt(cx, cy)
     selectAt(hit)
-    if (hit >= 0) flyTo(allCities[hit][2], allCities[hit][3])
+    if (hit >= 0) {
+      var city = allCities[hit]
+      flyTo(city[2], city[3])
+      var stored = Model.globeHomeStore(city[0], city[1], homeOverride, machineZone)
+      if (stored !== null && stored !== undefined)
+        homeClaimRequested(city[0], city[1])
+    }
     return hit
   }
 

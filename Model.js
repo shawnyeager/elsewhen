@@ -340,6 +340,18 @@ function footerHomeStore(label, zoneId, homeOverride, localZone) {
   return name === zoneCity ? "" : name
 }
 
+// A tap on the globe. Same as the footer, except tapping the city that is
+// already the header leaves it. A second tap must not put Chicago back.
+function globeHomeStore(label, zoneId, homeOverride, localZone) {
+  var stored = footerHomeStore(label, zoneId, homeOverride, localZone)
+  if (stored !== "") return stored
+  var name = String(label || "").trim()
+  var override = String(homeOverride || "").trim()
+  var shown = override === "" ? labelForZoneId(localZone) : override
+  if (name === shown) return null
+  return stored
+}
+
 // [{label, id}] -> "Los Angeles|America/Los_Angeles, Paris|Europe/Paris"
 function serializeZones(zones) {
   var parts = []
