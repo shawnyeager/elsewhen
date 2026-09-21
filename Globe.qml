@@ -104,6 +104,13 @@ Item {
   // offsetMode like any other.
   signal offsetModeToggleRequested()
 
+  // The machine zone and the raw homeCity override. Blank override means
+  // the header is already the zone's own city. The footer name asks the
+  // panel to store a new one; this file does not write settings.
+  property string machineZone: ""
+  property string homeOverride: ""
+  signal homeClaimRequested(string label, string zone)
+
   // The globe's selection, on its way back to the list so a city picked here
   // is still the focused one when the globe closes. Carries the label and the
   // zone rather than an index: `selected` indexes the globe's own catalogue,
@@ -930,11 +937,27 @@ Item {
 
         Text {
           id: cityName
+          readonly property var claim: footer.has
+            ? Model.footerHomeStore(footer.city[0], footer.city[1],
+                                    root.homeOverride, root.machineZone)
+            : null
           text: footer.has ? footer.city[0] : ""
-          color: root.foreground
+          color: claim !== null && claimHover.hovered ? Color.accent : root.foreground
           font.family: root.fontFamily
           font.pixelSize: Style.font.caption
           font.weight: Font.DemiBold
+
+          HoverHandler {
+            id: claimHover
+            enabled: cityName.claim !== null
+            cursorShape: Qt.PointingHandCursor
+          }
+          MouseArea {
+            anchors.fill: parent
+            enabled: cityName.claim !== null
+            cursorShape: Qt.PointingHandCursor
+            onClicked: root.homeClaimRequested(footer.city[0], footer.city[1])
+          }
         }
       }
 

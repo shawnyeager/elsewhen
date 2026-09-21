@@ -2761,6 +2761,17 @@ Panel {
                 item.offsetMode = Qt.binding(function() { return root.offsetMode })
                 item.homeOffsetMinutes = Qt.binding(function() { return root.localOffsetMinutes })
                 item.offsetModeToggleRequested.connect(function() { root.toggleOffsetMode() })
+                item.machineZone = Qt.binding(function() { return root.localZone })
+                item.homeOverride = Qt.binding(function() {
+                  return String(root.setting("homeCity", "")).trim()
+                })
+                item.homeClaimRequested.connect(function(label, zone) {
+                  var stored = Model.footerHomeStore(
+                    label, zone, String(root.setting("homeCity", "")).trim(), root.localZone)
+                  if (stored === null || stored === undefined) return
+                  root.persistSettings({ homeCity: stored })
+                  root.refreshFacts()
+                })
               item.smoothMotion = Qt.binding(function() { return root.smoothMotion })
               // Anything but a settled list or a settled globe is a
               // transition, in either direction.
