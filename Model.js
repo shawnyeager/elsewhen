@@ -323,6 +323,23 @@ function labelForZoneId(id) {
   return String(id || "").split("/").pop().replace(/_/g, " ")
 }
 
+// What the globe footer stores when its city is asked to be "here".
+// null means the name is not a control. "" is a real store: drop the
+// override and show the zone's own city. A label is a real store too.
+// The machine clock is never part of this answer.
+function footerHomeStore(label, zoneId, homeOverride, localZone) {
+  var zone = String(zoneId || "")
+  var local = String(localZone || "")
+  if (zone === "" || local === "" || zone !== local) return null
+  var name = String(label || "").trim()
+  if (name === "") return null
+  var override = String(homeOverride || "").trim()
+  var zoneCity = labelForZoneId(local)
+  var shown = override === "" ? zoneCity : override
+  if (name === shown) return override === "" ? null : ""
+  return name === zoneCity ? "" : name
+}
+
 // [{label, id}] -> "Los Angeles|America/Los_Angeles, Paris|Europe/Paris"
 function serializeZones(zones) {
   var parts = []
